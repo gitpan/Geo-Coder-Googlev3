@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Geo-Coder-Googlev3
-version:            0.10_50
+version:            0.10_51
 abstract:           Google Maps v3 Geocoding API 
 author:
     - Slaven Rezic <srezic@cpan.org>
