@@ -3,7 +3,7 @@
 #
 # Author: Slaven Rezic
 #
-# Copyright (C) 2010,2011 Slaven Rezic. All rights reserved.
+# Copyright (C) 2010,2011,2013 Slaven Rezic. All rights reserved.
 # This package is free software; you can redistribute it and/or
 # modify it under the same terms as Perl itself.
 #
@@ -12,7 +12,7 @@ package Geo::Coder::Googlev3;
 
 use strict;
 use vars qw($VERSION);
-our $VERSION = '0.12';
+our $VERSION = '0.12_50';
 
 use Carp            ('croak');
 use Encode          ();
@@ -32,6 +32,18 @@ sub new {
                            );
     $self->{region}   = delete $args{region} || delete $args{gl};
     $self->{language} = delete $args{language};
+    {
+        my $sensor;
+        if ($args{sensor}) {
+            $sensor = delete $args{sensor};
+            if ($sensor !~ m{^(false|true)$}) {
+                croak "sensor argument has to be either 'false' or 'true'";
+            }
+        } else {
+            $sensor = 'false';
+        }
+        $self->{sensor} = $sensor;
+    }
     if ($args{bounds}) {
         $self->bounds(delete $args{bounds});
     }
@@ -49,22 +61,9 @@ sub ua {
 
 sub geocode {
     my($self, %args) = @_;
-    my $loc = $args{location};
-    my $raw = $args{raw};
+    my $raw = delete $args{raw};
+    my $url = $self->geocode_url(%args);
     my $ua = $self->ua;
-    my $url = URI->new('http://maps.google.com/maps/api/geocode/json');
-    my %url_params;
-    $url_params{address}  = $loc;
-    $url_params{sensor}   = 'false';
-    $url_params{region}   = $self->{region}   if defined $self->{region};
-    $url_params{language} = $self->{language} if defined $self->{language};
-    if (defined $self->{bounds}) {
-        $url_params{bounds} = join '|', map { $_->{lat}.','.$_->{lng} } @{ $self->{bounds} };
-    }
-    while(my($k,$v) = each %url_params) {
-        $url->query_param($k => Encode::encode_utf8($v));
-    }
-    $url = $url->as_string;
     my $resp = $ua->get($url);
     if ($resp->is_success) {
 	my $content = $resp->decoded_content(charset => "none");
@@ -88,6 +87,26 @@ sub geocode {
     }
 }
 
+# private!
+sub geocode_url {
+    my($self, %args) = @_;
+    my $loc = $args{location};
+    my $url = URI->new('http://maps.google.com/maps/api/geocode/json');
+    my %url_params;
+    $url_params{address}  = $loc;
+    $url_params{sensor}   = $self->{sensor};
+    $url_params{region}   = $self->{region}   if defined $self->{region};
+    $url_params{language} = $self->{language} if defined $self->{language};
+    if (defined $self->{bounds}) {
+        $url_params{bounds} = join '|', map { $_->{lat}.','.$_->{lng} } @{ $self->{bounds} };
+    }
+    while(my($k,$v) = each %url_params) {
+        $url->query_param($k => Encode::encode_utf8($v));
+    }
+    $url = $url->as_string;
+    $url;
+}
+
 sub region {
     my $self = shift;
     $self->{region} = shift if @_;
@@ -99,6 +118,12 @@ sub language {
     my $self = shift;
     $self->{language} = shift if @_;
     return $self->{language};
+}
+
+sub sensor {
+    my $self = shift;
+    $self->{sensor} = shift if @_;
+    return $self->{sensor};
 }
 
 use constant _BOUNDS_ERROR_MSG => "bounds must be in the form [{lat=>...,lng=>...}, {lat=>...,lng=>...}]";
@@ -124,6 +149,8 @@ sub bounds {
 1;
 
 __END__
+
+=encoding ISO8859-1
 
 =head1 NAME
 
@@ -170,6 +197,11 @@ The parameters C<region>, C<language>, and C<bounds> are also
 accepted. The C<bounds> parameter should be in the form:
 
    [{lat => ..., lng => ...}, {lat => ..., lng => ...}]
+
+The parameter C<sensor> should be set to the string C<true> if the
+geocoding request comes from a device with a location sensor (see
+L<https://developers.google.com/maps/documentation/geocoding/#GeocodingRequests>).
+The default is C<false>.
 
 =back
 
@@ -304,6 +336,10 @@ Accessor for the C<language> parameter.
 =item bounds
 
 Accessor for the C<bounds> parameter.
+
+=item sensor
+
+Accessor for the C<sensor> parameter.
 
 =back  
 

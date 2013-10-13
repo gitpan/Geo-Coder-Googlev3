@@ -1,27 +1,27 @@
---- #YAML:1.0
-name:               Geo-Coder-Googlev3
-version:            0.12
-abstract:           Google Maps v3 Geocoding API 
+---
+abstract: 'Google Maps v3 Geocoding API '
 author:
-    - Slaven Rezic <srezic@cpan.org>
-license:            perl
-distribution_type:  module
-configure_requires:
-    ExtUtils::MakeMaker:  0
+  - 'Slaven Rezic <srezic@cpan.org>'
 build_requires:
-    ExtUtils::MakeMaker:  0
-requires:
-    Encode:          0
-    JSON::XS:        0
-    LWP::UserAgent:  0
-    URI:             0
-resources:
-    repository:  git://github.com/eserte/Geo-Coder-Googlev3.git
-no_index:
-    directory:
-        - t
-        - inc
-generated_by:       ExtUtils::MakeMaker version 6.56
+  ExtUtils::MakeMaker: 0
+configure_requires:
+  ExtUtils::MakeMaker: 0
+dynamic_config: 1
+generated_by: 'ExtUtils::MakeMaker version 6.64, CPAN::Meta::Converter version 2.120921'
+license: perl
 meta-spec:
-    url:      http://module-build.sourceforge.net/META-spec-v1.4.html
-    version:  1.4
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Geo-Coder-Googlev3
+no_index:
+  directory:
+    - t
+    - inc
+requires:
+  Encode: 0
+  JSON::XS: 0
+  LWP::UserAgent: 0
+  URI: 0
+resources:
+  repository: git://github.com/eserte/Geo-Coder-Googlev3.git
+version: 0.12_50
