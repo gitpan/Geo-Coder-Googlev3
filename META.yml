@@ -24,4 +24,4 @@ requires:
   URI: 0
 resources:
   repository: git://github.com/eserte/Geo-Coder-Googlev3.git
-version: 0.12_51
+version: 0.13
