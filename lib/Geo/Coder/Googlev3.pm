@@ -1,9 +1,9 @@
-# -*- perl -*-
+# -*- mode:perl; coding:iso-8859-1 -*-
 
 #
 # Author: Slaven Rezic
 #
-# Copyright (C) 2010,2011,2013 Slaven Rezic. All rights reserved.
+# Copyright (C) 2010,2011,2013,2014 Slaven Rezic. All rights reserved.
 # This package is free software; you can redistribute it and/or
 # modify it under the same terms as Perl itself.
 #
@@ -12,7 +12,7 @@ package Geo::Coder::Googlev3;
 
 use strict;
 use vars qw($VERSION);
-our $VERSION = '0.13';
+our $VERSION = '0.14';
 
 use Carp            ('croak');
 use Encode          ();
@@ -171,7 +171,7 @@ C<apikey> is used in Google's v3 API, and the returned data structure
 differs.
 
 Please check also
-L<http://code.google.com/intl/en/apis/maps/documentation/geocoding/>
+L<https://developers.google.com/maps/documentation/geocoding/>
 for more information about Google's Geocoding API and especially usage
 limits.
 
